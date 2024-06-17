@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/SaiGonByDay
-    username: postgres
-    password: sa
+    url: jdbc:postgresql://perfectly-prompt-egret.a1.pgedge.io:5432/tripbyday?sslmode=require
+    username: app
+    password: 6qrn9Oi48IbI2oQl48Be615v
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
