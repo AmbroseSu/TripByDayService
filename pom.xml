@@ -99,7 +99,16 @@
 		</dependency>
 	</dependencies>
 
-
+	<repositories>
+		<repository>
+			<id>central</id>
+			<url>https://repo.maven.apache.org/maven2</url>
+		</repository>
+		<repository>
+			<id>github</id>
+			<url>https://maven.pkg.github.com/AmbroseSu/TripByDayRepository</url>
+		</repository>
+	</repositories>
 
 	<build>
 		<plugins>
