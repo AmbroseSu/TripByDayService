@@ -28,7 +28,7 @@
 		<repository>
 			<id>github</id>
 			<name>GitHub Packages</name>
-			<url>https://maven.pkg.github.com/AmbroseSu/TripByDayRepository</url>
+			<url>https://maven.pkg.github.com/AmbroseSu/TripByDayService</url>
 		</repository>
 	</distributionManagement>
 
@@ -98,14 +98,6 @@
 			<version>3.2.0</version>
 		</dependency>
 	</dependencies>
-
-	<repositories>
-		<repository>
-			<id>github</id>
-			<url>https://maven.pkg.github.com/AmbroseSu/TripByDayRepository</url>
-		</repository>
-	</repositories>
-
 
 	<build>
 		<plugins>
