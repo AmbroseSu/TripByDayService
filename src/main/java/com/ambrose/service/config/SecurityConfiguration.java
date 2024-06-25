@@ -5,6 +5,7 @@ package com.ambrose.service.config;
 import com.ambrose.repository.entities.enums.Role;
 import com.ambrose.service.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -27,54 +28,21 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfiguration implements WebMvcConfigurer {
+public class SecurityConfiguration{
 
-  private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+  @Autowired
   private final UserService userService;
+
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-    http.csrf(AbstractHttpConfigurer::disable)
-        .authorizeHttpRequests(request -> request.requestMatchers("api/v1/auth/**",
-                "/swagger-ui/**",
-                "/swagger-ui.html",
-                "swagger-resources/**",
-                "/v3/api-docs/**",
-                "webjars/**",
-                "/login/oauth2/**",
-                "oauth2/**")
-            .permitAll()
-            //.requestMatchers("/api/v1/auth/signingoogle").authenticated()
-            .requestMatchers("/api/v1/admin/**").hasAnyAuthority(Role.ADMIN.name())
-            .requestMatchers("/api/v1/user/**").hasAnyAuthority(Role.CUSTOMER.name())
-            .anyRequest().authenticated())
-
-        .oauth2Login(oauth2 -> oauth2
-            .defaultSuccessUrl("/api/v1/auth/signingoogle", true))
-
-        //      .oauth2Login(Customizer.withDefaults())
-        //      .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.NEVER))
-        .authenticationProvider(authenticationProvider()).addFilterBefore(
-            jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class
-        );
-    http.exceptionHandling(exception -> exception
-        .authenticationEntryPoint(authenticationEntryPoint())
-        .accessDeniedHandler(accessDeniedHandler()));
-    return http.build();
+  public PasswordEncoder passwordEncoder(){
+    return new BCryptPasswordEncoder();
   }
 
-  private AuthenticationEntryPoint authenticationEntryPoint() {
-    return new HttpStatusEntryPoint(HttpStatus.FORBIDDEN);
-  }
 
-  private AccessDeniedHandler accessDeniedHandler() {
-    AccessDeniedHandlerImpl accessDeniedHandler = new AccessDeniedHandlerImpl();
-    accessDeniedHandler.setErrorPage("/403");
-    return accessDeniedHandler;
-  }
   @Bean
-  public AuthenticationProvider authenticationProvider(){
+  public AuthenticationProvider serviceAuthenticationProvider() {
     DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
     authenticationProvider.setUserDetailsService(userService.userDetailsService());
     authenticationProvider.setPasswordEncoder(passwordEncoder());
@@ -82,22 +50,8 @@ public class SecurityConfiguration implements WebMvcConfigurer {
   }
 
   @Bean
-  public PasswordEncoder passwordEncoder(){
-    return new BCryptPasswordEncoder();
-  }
-
-  @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
     return config.getAuthenticationManager();
-  }
-
-  @Override
-  public void addCorsMappings(CorsRegistry registry) {
-    registry.addMapping("/**")
-        .allowedOrigins("*")
-        .allowedMethods("GET,POST,PATCH,PUT,DELETE,OPTIONS,HEAD")
-        .allowedHeaders("*")
-        .exposedHeaders("X-Get-Header");
   }
 
 }

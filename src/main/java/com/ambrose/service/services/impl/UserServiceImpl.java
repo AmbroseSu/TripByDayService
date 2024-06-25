@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
   public UserDetailsService userDetailsService(){
     return new UserDetailsService() {
       @Override
-      public UserDetails loadUserByUsername(String username){
+      public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
         return userRepository.findByLogin(username)
             //.map(UserSignupDetails::new)
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));

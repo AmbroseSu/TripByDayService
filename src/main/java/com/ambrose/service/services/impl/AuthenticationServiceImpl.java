@@ -20,10 +20,8 @@ import com.ambrose.service.services.AuthenticationService;
 import com.ambrose.service.services.JWTService;
 import com.ambrose.service.services.UserService;
 import jakarta.validation.ConstraintViolationException;
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Optional;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +29,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -92,6 +89,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
   public ResponseEntity<?> signin(SigninRequest signinRequest){
     try{
+      System.out.println("Authenticating user: {}"+ signinRequest.getLogin());
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signinRequest.getLogin(),signinRequest.getPassword()));
     }catch (Exception e){
       return ResponseUtil.error("Email or Password not exist", "Login False",HttpStatus.BAD_REQUEST);
@@ -145,7 +143,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   public ResponseEntity<?> refreshToken(RefreshTokenRequest refreshTokenRequest){
     String userEmail = jwtService.extractUserName(refreshTokenRequest.getToken());
     User user = userRepository.findByLogin(userEmail).orElseThrow();
-    if(jwtService.isTokenValid(refreshTokenRequest.getToken(),user)){
+    if(jwtService.isTokenValid(refreshTokenRequest.getToken(), user)){
       var jwt = jwtService.generateToken(user);
 
       JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();

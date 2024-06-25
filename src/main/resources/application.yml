@@ -1,9 +1,19 @@
 spring:
+#  datasource:
+#    url: jdbc:postgresql://perfectly-prompt-egret.a1.pgedge.io:5432/tripbyday?sslmode=require
+#    username: app
+#    password: 6qrn9Oi48IbI2oQl48Be615v
+#    driver-class-name: org.postgresql.Driver
   datasource:
-    url: jdbc:postgresql://perfectly-prompt-egret.a1.pgedge.io:5432/tripbyday?sslmode=require
-    username: app
-    password: 6qrn9Oi48IbI2oQl48Be615v
+    url: jdbc:postgresql://localhost:5432/SaiGonByDay
+    username: postgres
+    password: sa
     driver-class-name: org.postgresql.Driver
+#  datasource:
+#    url: jdbc:postgresql://ep-rough-band-a15zq7c8.ap-southeast-1.aws.neon.tech/tripbyday?sslmode=require
+#    username: tripbyday_owner
+#    password: UaoN7uglL9jF
+#    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
@@ -27,6 +37,8 @@ spring:
             token-uri: https://oauth2.googleapis.com/token
             user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
             user-name-attribute: sub
+  main:
+    allow-bean-definition-overriding: true
 server:
   port: 8082
 
